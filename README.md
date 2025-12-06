@@ -1,53 +1,92 @@
-# Job Matcher Chrome Extension
+# Job Matcher AI - Chrome Extension
 
-A powerful Chrome Extension that uses **Google Gemini AI** to match your resume with job descriptions on popular job boards like LinkedIn and Reed.co.uk.
+A powerful Chrome Extension that uses **Google Gemini AI** to analyze how well your resume matches job descriptions. Get detailed scoring with actionable pros/cons for each evaluation dimension.
 
-## Features
+![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![Gemini AI](https://img.shields.io/badge/Gemini-AI-orange)
 
--   **AI-Powered Matching**: Uses Google's Gemini models (supports `Gemini 2.5 Pro` and `2.5 Flash Preview`) to analyze compatibility.
--   **Dual Scoring System**:
-    -   **Job Match Score**: Pure fit between skills/experience and job requirements.
-    -   **ATS Score**: Optimization level for Applicant Tracking Systems.
--   **Smart Integration**: Automatically detects job descriptions on **LinkedIn** and **Reed.co.uk**.
--   **Universal Fallback**: Works on almost any other job site by extracting the main page content.
--   **Multi-Language Support**: Fully localized for **English** and **Traditional Chinese (繁體中文)**.
--   **Privacy Focused**: Your API Key is stored locally in your browser.
+## ✨ Features
 
-## Workflow
+### 🎯 Intelligent Scoring System
+- **Job Match Score (0-100)**: Evaluates 5 dimensions:
+  - Hard Skills, Soft Skills, Experience Alignment, Education & Certification, Semantic Similarity
+- **ATS Score (0-100)**: Evaluates 4 dimensions:
+  - Keyword Alignment, Formatting Structure, Section Structure, Language Compliance
+- **Overall Fit Score**: Weighted combination (70% Job + 30% ATS)
 
-1.  **Installation**: Load the extension in Chrome (Unpacked).
-2.  **Setup**:
-    *   Open the side panel.
-    *   Click the **Gear ⚙️ Icon** to open Settings.
-    *   Enter your **Gemini API Key**.
-    *   Choose your preferred **AI Model** and **Language**.
-    *   Click **Save**.
-3.  **Profile**:
-    *   Paste your **Resume** text into the "Resume" tab.
-    *   (Optional) Add extra details in "Additional Info" (e.g., "I prefer remote work").
-4.  **Matching**:
-    *   Navigate to a job page (e.g., on LinkedIn).
-    *   The extension will automatically detect the job.
-    *   Click **"Analyze Match"** (or "分析配對程度").
-    *   View your **Compatibility Score** and detailed **AI Reasoning**.
+### 📊 Detailed Analysis
+- **Pros & Cons** for each dimension explaining what's strong and what needs improvement
+- **Final Suggestion** with interview likelihood assessment
+- All analysis text generated in your selected language
 
-## Technology Stack
+### 🌐 Smart Job Detection
+- **LinkedIn**: Automatic job description extraction
+- **Reed.co.uk**: Native support
+- **Universal Fallback**: Works on any job site by extracting main content
 
--   **Frontend**: HTML5, CSS3 (Modern Variables & Flexbox), Vanilla JavaScript.
--   **Extension API**: Manifest V3, Side Panel API, Scripting API.
--   **AI Integration**: Google Generative Language API (Gemini).
+### 🎨 Modern iOS-Style UI
+- Animated progress rings
+- Clean, responsive design
+- Dark mode friendly
 
-## Installation
+### 🌍 Multi-Language Support
+- **English**
+- **繁體中文 (Traditional Chinese)**
 
-1.  Clone or download this repository.
-2.  Open Chrome and go to `chrome://extensions`.
-3.  Enable **Developer mode** (toggle in top right).
-4.  Click **Load unpacked**.
-5.  Select the `Job_Matcher` folder.
+## 🚀 Installation
 
-## Updates
+1. Clone or download this repository
+2. Open Chrome → `chrome://extensions`
+3. Enable **Developer mode** (toggle top right)
+4. Click **Load unpacked**
+5. Select the `Job_Matcher` folder
+
+## ⚙️ Setup
+
+1. Open the extension side panel
+2. Go to **Settings** (gear icon)
+3. Enter your **Gemini API Key** ([Get one here](https://aistudio.google.com/app/apikey))
+4. Choose your **AI Model** and **Language**
+5. Click **Save**
+
+## 📝 Usage
+
+1. **Profile Tab**: Paste your resume text
+2. **Match Tab**: Navigate to a job page
+3. Click **Analyze Match**
+4. Review your scores and detailed analysis
+
+## 🛠 Technology Stack
+
+- **Frontend**: HTML5, Tailwind CSS, Vanilla JavaScript
+- **Extension API**: Manifest V3, Side Panel API, Scripting API
+- **AI**: Google Generative Language API (Gemini 2.5 Pro / Flash)
+- **Build**: Tailwind CSS CLI
+
+## 📁 Project Structure
+
+```
+Job_Matcher/
+├── manifest.json          # Extension configuration
+├── sidepanel.html         # Main UI
+├── sidepanel.js           # Core logic & AI integration
+├── translations.js        # i18n strings (EN/ZH-TW)
+├── background.js          # Service worker
+├── content_*.js           # Job extraction scripts
+├── src/input.css          # Tailwind source
+├── styles.css             # Compiled CSS
+└── tailwind.config.js     # Tailwind configuration
+```
+
+## 🔒 Privacy
+
+- Your API key is stored locally in Chrome storage
+- Resume data never leaves your browser except for AI analysis
+- No tracking or analytics
+
+## 📄 License
+
+MIT License
+
+---
 
 *Last Updated: 2025-12-06*
-- Added Internationalization (EN/ZH-TW).
-- Added Model Selection.
-- Improved UI/UX with premium styling.
