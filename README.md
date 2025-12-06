@@ -32,7 +32,40 @@ A powerful Chrome Extension that uses **Google Gemini AI** to analyze how well y
 - **English**
 - **繁體中文 (Traditional Chinese)**
 
-## 🚀 Installation
+## � UI Layout
+
+The extension uses a **3-tab navigation** system:
+
+### Match Tab
+- **Status Bar**: Shows connection status and detected job title
+- **Analyze Button**: Triggers AI analysis
+- **Score Cards**: Two animated circular progress rings
+  - Job Match Score (blue)
+  - ATS Score (green)
+- **Final Suggestion Card**: Color-coded recommendation with icon
+- **Job Fit Analysis**: Expandable list of 5 dimensions with scores + pros/cons
+- **ATS Optimization**: Expandable list of 4 dimensions with scores + pros/cons
+
+### Profile Tab
+- **Resume Input**: Large text area for pasting resume content
+- **Additional Info**: Optional notes (cover letter, preferences, etc.)
+
+### Settings Tab
+- **API Key Input**: Secure field for Gemini API key
+- **Model Selection**: Dropdown for Gemini model choice
+- **Language Selection**: English / Traditional Chinese
+- **Save Button**: Persists settings to Chrome storage
+
+### Visual Design Elements
+| Element | Style |
+|---------|-------|
+| Score Rings | Animated SVG with dynamic fill |
+| Score Badges | Color-coded (green/yellow/red) based on score |
+| Pros | Green bullet points |
+| Cons | Red bullet points |
+| Final Suggestion | Gradient card with colored left border |
+
+## �🚀 Installation
 
 1. Clone or download this repository
 2. Open Chrome → `chrome://extensions`
