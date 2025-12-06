@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+@layer components {
+
+    /* ===== PROGRESS RING ===== */
+    .progress-ring {
+        transform: rotate(-90deg);
+    }
+
+    .progress-ring__circle {
+        transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        stroke-linecap: round;
+    }
+
+    .progress-ring__bg {
+        stroke: #E5E5EA;
+    }
+
+    /* Gradient stroke via filter */
+    .progress-ring--success .progress-ring__circle {
+        stroke: #34C759;
+    }
+
+    .progress-ring--warning .progress-ring__circle {
+        stroke: #FF9500;
+    }
+
+    .progress-ring--danger .progress-ring__circle {
+        stroke: #FF3B30;
+    }
+
+    .progress-ring--primary .progress-ring__circle {
+        stroke: #007AFF;
+    }
+
+    /* ===== SCORE CARD GLOW ===== */
+    .score-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .score-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, rgba(0, 122, 255, 0.08) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .score-card:hover::before {
+        opacity: 1;
+    }
+
+    /* ===== SUGGESTION CARD GRADIENTS ===== */
+    .suggestion-excellent {
+        background: linear-gradient(135deg, #34C75910 0%, #34C75905 100%);
+        border-left: 4px solid #34C759;
+    }
+
+    .suggestion-good {
+        background: linear-gradient(135deg, #007AFF10 0%, #007AFF05 100%);
+        border-left: 4px solid #007AFF;
+    }
+
+    .suggestion-fair {
+        background: linear-gradient(135deg, #FF950010 0%, #FF950005 100%);
+        border-left: 4px solid #FF9500;
+    }
+
+    .suggestion-poor {
+        background: linear-gradient(135deg, #FF3B3010 0%, #FF3B3005 100%);
+        border-left: 4px solid #FF3B30;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes scale-in {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes slide-up {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.4s ease-out;
+    }
+
+    .animate-scale-in {
+        animation: scale-in 0.3s ease-out;
+    }
+
+    .animate-slide-up {
+        animation: slide-up 0.5s ease-out;
+    }
+
+    /* ===== NAV PILL INDICATOR ===== */
+    .nav-item.active {
+        position: relative;
+    }
+
+    .nav-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        background: currentColor;
+        border-radius: 50%;
+    }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .section-header__icon {
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ===== PULSE ANIMATION ===== */
+    @keyframes pulse-ring {
+        0% {
+            transform: scale(0.95);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+
+        100% {
+            transform: scale(0.95);
+            opacity: 1;
+        }
+    }
+
+    .animate-pulse-ring {
+        animation: pulse-ring 2s ease-in-out infinite;
+    }
+
+    /* ===== GLASSMORPHISM CARD ===== */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+
+    /* ===== BUTTON SHINE ===== */
+    .btn-primary {
+        background: linear-gradient(180deg, #0A84FF 0%, #007AFF 100%);
+        box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary:active {
+        background: linear-gradient(180deg, #007AFF 0%, #0062CC 100%);
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "job_matcher",
+  "version": "1.0.0",
+  "description": "A powerful Chrome Extension that uses **Google Gemini AI** to match your resume with job descriptions on popular job boards like LinkedIn and Reed.co.uk.",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsz106106/Job_Matcher_AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tsz106106/Job_Matcher_AI/issues"
+  },
+  "homepage": "https://github.com/tsz106106/Job_Matcher_AI#readme"
+}

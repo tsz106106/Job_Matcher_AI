@@ -6,168 +6,283 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Job Matcher</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Google Fonts for premium feel -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-  <div class="app-container">
-    <header>
-      <h1 data-i18n="appTitle">Job Matcher AI</h1>
-      <!-- Settings button removed as it's now a tab -->
+<body class="bg-background text-slate-900 font-sans text-[15px] pb-20 antialiased selection:bg-primary/20">
+  <div class="max-w-3xl mx-auto flex flex-col min-h-screen">
+
+    <!-- iOS Title Header (Sticky with Blur) -->
+    <header
+      class="sticky top-0 z-40 px-5 pt-12 pb-2 bg-background/80 backdrop-blur-md flex justify-between items-end border-b border-black/5 transition-all">
+      <h1 class="text-3xl font-bold tracking-tight text-black" data-i18n="appTitle">Job Matcher</h1>
     </header>
 
-    <main id="main-content">
+    <main id="main-content" class="px-5 py-6 flex-1">
 
       <!-- VIEW 1: MATCHING -->
-      <div id="view-match" class="view-section active">
-        <section class="job-section">
-          <div class="job-header">
-            <h2 data-i18n="currentJobSection">Current Job</h2>
-            <button id="refresh-job" class="icon-btn" title="Refresh Job Context">🔄</button>
-          </div>
-          <div id="job-status" class="status-box waiting" data-i18n="waitingForJob">
-            Open a job page to start matching
-          </div>
-          <div id="job-details" class="hidden">
-            <h3 id="job-title">Job Title</h3>
-            <p id="job-company">Company</p>
-          </div>
-        </section>
+      <div id="view-match" class="view-section animate-fade-in space-y-6">
 
-        <section class="action-section">
-          <button id="match-btn" class="primary-btn" disabled>
-            <span class="btn-text" data-i18n="analyzeBtn">Analyze Match</span>
-          </button>
-        </section>
+        <!-- Compact Control Bar (iOS Pill) -->
+        <div
+          class="flex items-center bg-surface/90 backdrop-blur-xl p-3 pr-4 rounded-ios shadow-sm ring-1 ring-black/5 gap-4">
+          <!-- Left: Job Info -->
+          <div class="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
+            <div id="job-status" class="text-[13px] text-slate-400 font-medium italic truncate"
+              data-i18n="waitingForJob">Waiting for job...</div>
+            <div id="job-details" class="hidden">
+              <div id="job-title" class="text-[15px] font-semibold text-black truncate leading-tight">Job Title</div>
+              <div id="job-company" class="text-[13px] text-slate-500 truncate">Company</div>
+            </div>
+          </div>
+
+          <!-- Right: Actions -->
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <button id="refresh-job"
+              class="w-8 h-8 flex items-center justify-center bg-slate-100/80 hover:bg-slate-200 rounded-full text-slate-600 transition-colors active:scale-95 duration-200"
+              title="Refresh">
+              <!-- Refresh Icon SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+            </button>
+            <button id="match-btn"
+              class="btn-primary text-white rounded-full font-semibold text-[15px] px-6 py-2.5 active:opacity-80 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+              disabled>
+              <span class="btn-text" data-i18n="analyzeBtn">Analyze</span>
+            </button>
+          </div>
+        </div>
 
         <section id="results-section" class="hidden">
           <!-- Header Section -->
-          <div id="results-header" class="results-header">
-            <h2 id="res-job-title" class="res-title"></h2>
-            <div id="res-resume-name" class="res-subtitle"></div>
-            <div class="res-info" data-i18n="headerAnalysisBase">Analysis based on current job description and resume
-              content.</div>
+          <div id="results-header" class="mb-4">
+            <h2 id="res-job-title" class="text-xl font-bold text-black leading-tight mb-1"></h2>
+            <div id="res-resume-name" class="text-[13px] text-slate-500 font-medium mb-1"></div>
+            <div class="text-[11px] text-slate-400" data-i18n="headerAnalysisBase">Analysis based on current job &
+              resume.</div>
           </div>
 
           <!-- Score Summary Row -->
-          <div class="score-summary-row">
+          <div class="flex gap-4 mb-6">
             <!-- Job Match Card -->
-            <div class="score-card main-card">
-              <h3 data-i18n="cardJobMatchTitle">Job Matching Score</h3>
-              <div class="big-score">
-                <span id="job-total-score">0</span><span class="total-base">/100</span>
+            <div
+              class="score-card bg-surface rounded-[24px] p-6 text-center flex-1 shadow-sm ring-1 ring-black/5 flex flex-col items-center justify-center animate-scale-in">
+              <div class="relative w-28 h-28 mb-3">
+                <svg class="progress-ring w-full h-full" viewBox="0 0 100 100">
+                  <circle class="progress-ring__bg" cx="50" cy="50" r="42" fill="none" stroke-width="8" />
+                  <circle id="job-progress-ring" class="progress-ring__circle" cx="50" cy="50" r="42" fill="none"
+                    stroke-width="8" stroke="#007AFF" stroke-dasharray="0 264" stroke-dashoffset="0" />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <span id="job-total-score" class="text-[32px] font-bold text-slate-900 leading-none">0</span>
+                  <span class="text-[11px] text-slate-400 font-medium mt-0.5">/ 100</span>
+                </div>
               </div>
-              <div id="job-level-text" class="score-level"></div>
+              <h3 class="text-[13px] font-semibold text-slate-500 uppercase tracking-wide"
+                data-i18n="cardJobMatchTitle">Job Match</h3>
+              <div id="job-level-text" class="text-[14px] font-semibold text-primary mt-1"></div>
             </div>
 
             <!-- ATS Match Card -->
-            <div class="score-card main-card">
-              <h3 data-i18n="cardAtsMatchTitle">ATS Matching Score</h3>
-              <div class="big-score">
-                <span id="ats-total-score">0</span><span class="total-base">/100</span>
+            <div
+              class="score-card bg-surface rounded-[24px] p-6 text-center flex-1 shadow-sm ring-1 ring-black/5 flex flex-col items-center justify-center animate-scale-in"
+              style="animation-delay: 0.1s;">
+              <div class="relative w-28 h-28 mb-3">
+                <svg class="progress-ring w-full h-full" viewBox="0 0 100 100">
+                  <circle class="progress-ring__bg" cx="50" cy="50" r="42" fill="none" stroke-width="8" />
+                  <circle id="ats-progress-ring" class="progress-ring__circle" cx="50" cy="50" r="42" fill="none"
+                    stroke-width="8" stroke="#34C759" stroke-dasharray="0 264" stroke-dashoffset="0" />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <span id="ats-total-score" class="text-[32px] font-bold text-slate-900 leading-none">0</span>
+                  <span class="text-[11px] text-slate-400 font-medium mt-0.5">/ 100</span>
+                </div>
               </div>
-              <div id="ats-level-text" class="score-level"></div>
+              <h3 class="text-[13px] font-semibold text-slate-500 uppercase tracking-wide"
+                data-i18n="cardAtsMatchTitle">ATS Score</h3>
+              <div id="ats-level-text" class="text-[14px] font-semibold text-success mt-1"></div>
+            </div>
+          </div>
+
+          <!-- Final Suggestion -->
+          <div id="final-suggestion-section"
+            class="rounded-[20px] p-5 mb-6 hidden animate-slide-up ring-1 ring-black/5">
+            <div class="flex items-start gap-3">
+              <div id="fs-icon" class="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0">
+                💡
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-[15px] font-bold text-slate-900 mb-1" data-i18n="finalSuggestionTitle">Final Suggestion
+                </h3>
+                <div id="fs-label" class="text-[14px] font-semibold mb-1"></div>
+                <div id="fs-explanation" class="text-[13px] text-slate-600 leading-relaxed"></div>
+              </div>
             </div>
           </div>
 
           <!-- Job Fit Details -->
-          <div class="details-section">
-            <h3 class="section-title">Job Fit Details</h3>
-            <div id="job-fit-details-container"></div>
-
-            <div class="summary-lists">
-              <div class="list-block success">
-                <h4 data-i18n="lblTopMatched">Top Matched Requirements</h4>
-                <ul id="job-top-matched"></ul>
+          <div class="mb-6">
+            <div class="section-header mb-4">
+              <div class="section-header__icon bg-blue-100 text-primary">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </div>
-              <div class="list-block danger">
-                <h4 data-i18n="lblTopMissing">Top Missing Requirements</h4>
-                <ul id="job-top-missing"></ul>
-              </div>
+              <h3 class="text-[17px] font-bold text-slate-900">Job Fit Analysis</h3>
             </div>
+            <div id="job-fit-details-container" class="rounded-[20px] overflow-hidden ring-1 ring-black/5"></div>
           </div>
 
           <!-- ATS Optimization Details -->
-          <div class="details-section">
-            <h3 class="section-title">ATS Optimization Details</h3>
-            <div id="ats-opt-details-container"></div>
-
-            <div class="summary-lists">
-              <div class="list-block warning">
-                <h4 data-i18n="lblAtsRisks">ATS Processing Risks</h4>
-                <ul id="ats-risks"></ul>
+          <div class="mb-6">
+            <div class="section-header mb-4">
+              <div class="section-header__icon bg-emerald-100 text-success">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
               </div>
-              <div class="list-block primary">
-                <h4 data-i18n="lblImprovements">Improvement Suggestions</h4>
-                <ul id="ats-improvements"></ul>
+              <h3 class="text-[17px] font-bold text-slate-900">ATS Optimization</h3>
+            </div>
+            <div id="ats-opt-details-container" class="rounded-[20px] overflow-hidden ring-1 ring-black/5"></div>
+          </div>
+        </section>
+      </div><!-- End view-match -->
+
+      <!-- VIEW 2: PROFILE -->
+      <div id="view-profile" class="view-section hidden flex-col h-full overflow-y-auto pb-24 p-5">
+        <section class="user-data-section">
+          <h2 class="text-[28px] font-bold text-black mb-6 tracking-tight" data-i18n="profileSection">Your Profile</h2>
+
+          <div class="flex gap-2 p-1 bg-surface rounded-xl ring-1 ring-black/5 mb-6">
+            <button
+              class="tab-btn flex-1 py-2 text-[13px] font-semibold rounded-lg transition-all duration-200 bg-white text-black shadow-sm"
+              data-tab="resume" data-i18n="resumeTab">Resume</button>
+            <button
+              class="tab-btn flex-1 py-2 text-[13px] font-semibold rounded-lg transition-all duration-200 text-slate-500 hover:text-black"
+              data-tab="info" data-i18n="infoTab">Info</button>
+          </div>
+
+          <div class="tab-content block" id="resume-tab-content">
+            <div class="file-upload-wrapper">
+              <textarea id="resume-text"
+                class="w-full h-64 p-4 text-[14px] leading-relaxed bg-surface border-0 ring-1 ring-black/5 rounded-ios focus:ring-2 focus:ring-primary/20 resize-none transition-shadow placeholder:text-slate-400"
+                placeholder="Paste your resume text here..." data-i18n-placeholder="resumePlaceholder"></textarea>
+            </div>
+          </div>
+
+          <div class="tab-content hidden" id="info-tab-content">
+            <textarea id="additional-info"
+              class="w-full h-64 p-4 text-[14px] leading-relaxed bg-surface border-0 ring-1 ring-black/5 rounded-ios focus:ring-2 focus:ring-primary/20 resize-none transition-shadow placeholder:text-slate-400"
+              placeholder="Add specific skills, cover letter notes, or preferences..."
+              data-i18n-placeholder="infoPlaceholder"></textarea>
+          </div>
+        </section>
+      </div>
+
+      <!-- VIEW 3: SETTINGS -->
+      <div id="view-settings" class="view-section hidden flex-col h-full overflow-y-auto pb-24 p-5">
+        <section id="settings-section">
+          <h2 class="text-[28px] font-bold text-black mb-6 tracking-tight" data-i18n="navSettings">Settings</h2>
+
+          <div class="bg-surface rounded-ios p-5 ring-1 ring-black/5 mb-4">
+            <div class="form-group mb-5">
+              <label for="apiKey" class="block text-[13px] font-semibold text-slate-900 mb-2"
+                data-i18n="apiKeyLabel">Gemini API Key</label>
+              <input type="password" id="apiKey"
+                class="w-full px-4 py-3 bg-white border-0 ring-1 ring-black/10 rounded-xl text-[14px] focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                placeholder="Enter your Gemini API Key">
+              <div class="mt-2 text-[12px] text-slate-400" data-i18n="apiKeyHelp">Get your key from Google AI Studio
+              </div>
+            </div>
+
+            <div class="form-group mb-5">
+              <label for="modelSelect" class="block text-[13px] font-semibold text-slate-900 mb-2"
+                data-i18n="modelLabel">AI Model</label>
+              <div class="relative">
+                <select id="modelSelect"
+                  class="w-full px-4 py-3 bg-white border-0 ring-1 ring-black/10 rounded-xl text-[14px] appearance-none focus:ring-2 focus:ring-primary/20 outline-none">
+                  <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                  <option value="gemini-2.5-flash-preview-09-2025">Gemini 2.5 Flash Preview (09-2025)</option>
+                </select>
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="languageSelect" class="block text-[13px] font-semibold text-slate-900 mb-2"
+                data-i18n="languageLabel">Language</label>
+              <div class="relative">
+                <select id="languageSelect"
+                  class="w-full px-4 py-3 bg-white border-0 ring-1 ring-black/10 rounded-xl text-[14px] appearance-none focus:ring-2 focus:ring-primary/20 outline-none">
+                  <option value="en">English</option>
+                  <option value="zh-TW">Traditional Chinese (繁體中文)</option>
+                </select>
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
+
+          <button id="save-settings"
+            class="w-full py-3.5 bg-slate-900 text-white font-semibold rounded-xl active:scale-[0.98] transition-all duration-200 shadow-lg shadow-slate-500/20"
+            data-i18n="saveSettings">Save Settings</button>
         </section>
-
-        <!-- VIEW 2: PROFILE & SETTINGS -->
-        <div id="view-profile" class="view-section">
-          <!-- Settings Combined Here -->
-          <section id="settings-section">
-            <h2 data-i18n="navProfile">Settings</h2>
-            <div class="form-group">
-              <label for="apiKey" data-i18n="apiKeyLabel">Gemini API Key</label>
-              <input type="password" id="apiKey" placeholder="Enter your Gemini API Key">
-              <div class="help-text" data-i18n="apiKeyHelp">Get your key from Google AI Studio</div>
-            </div>
-            <div class="form-group">
-              <label for="modelSelect" data-i18n="modelLabel">AI Model</label>
-              <select id="modelSelect">
-                <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-                <option value="gemini-2.5-flash-preview-09-2025">Gemini 2.5 Flash Preview (09-2025)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="languageSelect" data-i18n="languageLabel">Language</label>
-              <select id="languageSelect">
-                <option value="en">English</option>
-                <option value="zh-TW">Traditional Chinese (繁體中文)</option>
-              </select>
-            </div>
-            <button id="save-settings" class="secondary-btn" data-i18n="saveSettings">Save Settings</button>
-          </section>
-
-          <section class="user-data-section">
-            <h2 data-i18n="profileSection">Your Profile</h2>
-
-            <div class="tabs">
-              <button class="tab-btn active" data-tab="resume" data-i18n="resumeTab">Resume</button>
-              <button class="tab-btn" data-tab="info" data-i18n="infoTab">Additional Info</button>
-            </div>
-
-            <div class="tab-content active" id="resume-tab">
-              <div class="file-upload-wrapper">
-                <textarea id="resume-text" placeholder="Paste your resume text here..."
-                  data-i18n-placeholder="resumePlaceholder"></textarea>
-              </div>
-            </div>
-
-            <div class="tab-content" id="info-tab">
-              <textarea id="additional-info" placeholder="Add specific skills, cover letter notes, or preferences..."
-                data-i18n-placeholder="infoPlaceholder"></textarea>
-            </div>
-          </section>
-        </div>
+      </div>
+      <!-- End view-profile -->
 
     </main>
 
+    <!-- iOS Bottom Navigation (Glassmorphism) -->
     <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-      <button class="nav-item active" data-view="match">
-        <span class="nav-icon">📊</span>
-        <span class="nav-label" data-i18n="navMatch">Match</span>
+    <nav
+      class="bottom-nav grid grid-cols-3 gap-1 p-2 bg-surface/85 backdrop-blur-md border-t border-black/5 fixed bottom-0 w-full z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+      <button
+        class="nav-item group flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 text-primary active"
+        data-view="match">
+        <div class="mb-1 transition-transform duration-200 group-active:scale-90">
+          <svg class="w-6 h-6 stroke-[2]" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <span class="text-[10px] font-semibold tracking-wide" data-i18n="navMatch">Match</span>
       </button>
-      <button class="nav-item" data-view="profile">
-        <span class="nav-icon">👤</span>
-        <span class="nav-label" data-i18n="navProfile">Profile</span>
+      <button
+        class="nav-item group flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 text-slate-400 hover:text-slate-600"
+        data-view="profile">
+        <div class="mb-1 transition-transform duration-200 group-active:scale-90">
+          <svg class="w-6 h-6 stroke-[2]" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+        <span class="text-[10px] font-semibold tracking-wide" data-i18n="navProfile">Profile</span>
+      </button>
+      <button
+        class="nav-item group flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 text-slate-400 hover:text-slate-600"
+        data-view="settings">
+        <div class="mb-1 transition-transform duration-200 group-active:scale-90">
+          <svg class="w-6 h-6 stroke-[2]" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <span class="text-[10px] font-semibold tracking-wide" data-i18n="navSettings">Settings</span>
       </button>
     </nav>
   </div>
