@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Matcher</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts for premium feel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="app-container">
+    <header>
+      <h1 data-i18n="appTitle">Job Matcher AI</h1>
+      <!-- Settings button removed as it's now a tab -->
+    </header>
+
+    <main id="main-content">
+
+      <!-- VIEW 1: MATCHING -->
+      <div id="view-match" class="view-section active">
+        <section class="job-section">
+          <div class="job-header">
+            <h2 data-i18n="currentJobSection">Current Job</h2>
+            <button id="refresh-job" class="icon-btn" title="Refresh Job Context">🔄</button>
+          </div>
+          <div id="job-status" class="status-box waiting" data-i18n="waitingForJob">
+            Open a job page to start matching
+          </div>
+          <div id="job-details" class="hidden">
+            <h3 id="job-title">Job Title</h3>
+            <p id="job-company">Company</p>
+          </div>
+        </section>
+
+        <section class="action-section">
+          <button id="match-btn" class="primary-btn" disabled>
+            <span class="btn-text" data-i18n="analyzeBtn">Analyze Match</span>
+          </button>
+        </section>
+
+        <section id="results-section" class="hidden">
+          <!-- Header Section -->
+          <div id="results-header" class="results-header">
+            <h2 id="res-job-title" class="res-title"></h2>
+            <div id="res-resume-name" class="res-subtitle"></div>
+            <div class="res-info" data-i18n="headerAnalysisBase">Analysis based on current job description and resume
+              content.</div>
+          </div>
+
+          <!-- Score Summary Row -->
+          <div class="score-summary-row">
+            <!-- Job Match Card -->
+            <div class="score-card main-card">
+              <h3 data-i18n="cardJobMatchTitle">Job Matching Score</h3>
+              <div class="big-score">
+                <span id="job-total-score">0</span><span class="total-base">/100</span>
+              </div>
+              <div id="job-level-text" class="score-level"></div>
+            </div>
+
+            <!-- ATS Match Card -->
+            <div class="score-card main-card">
+              <h3 data-i18n="cardAtsMatchTitle">ATS Matching Score</h3>
+              <div class="big-score">
+                <span id="ats-total-score">0</span><span class="total-base">/100</span>
+              </div>
+              <div id="ats-level-text" class="score-level"></div>
+            </div>
+          </div>
+
+          <!-- Job Fit Details -->
+          <div class="details-section">
+            <h3 class="section-title">Job Fit Details</h3>
+            <div id="job-fit-details-container"></div>
+
+            <div class="summary-lists">
+              <div class="list-block success">
+                <h4 data-i18n="lblTopMatched">Top Matched Requirements</h4>
+                <ul id="job-top-matched"></ul>
+              </div>
+              <div class="list-block danger">
+                <h4 data-i18n="lblTopMissing">Top Missing Requirements</h4>
+                <ul id="job-top-missing"></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- ATS Optimization Details -->
+          <div class="details-section">
+            <h3 class="section-title">ATS Optimization Details</h3>
+            <div id="ats-opt-details-container"></div>
+
+            <div class="summary-lists">
+              <div class="list-block warning">
+                <h4 data-i18n="lblAtsRisks">ATS Processing Risks</h4>
+                <ul id="ats-risks"></ul>
+              </div>
+              <div class="list-block primary">
+                <h4 data-i18n="lblImprovements">Improvement Suggestions</h4>
+                <ul id="ats-improvements"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 2: PROFILE & SETTINGS -->
+        <div id="view-profile" class="view-section">
+          <!-- Settings Combined Here -->
+          <section id="settings-section">
+            <h2 data-i18n="navProfile">Settings</h2>
+            <div class="form-group">
+              <label for="apiKey" data-i18n="apiKeyLabel">Gemini API Key</label>
+              <input type="password" id="apiKey" placeholder="Enter your Gemini API Key">
+              <div class="help-text" data-i18n="apiKeyHelp">Get your key from Google AI Studio</div>
+            </div>
+            <div class="form-group">
+              <label for="modelSelect" data-i18n="modelLabel">AI Model</label>
+              <select id="modelSelect">
+                <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                <option value="gemini-2.5-flash-preview-09-2025">Gemini 2.5 Flash Preview (09-2025)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="languageSelect" data-i18n="languageLabel">Language</label>
+              <select id="languageSelect">
+                <option value="en">English</option>
+                <option value="zh-TW">Traditional Chinese (繁體中文)</option>
+              </select>
+            </div>
+            <button id="save-settings" class="secondary-btn" data-i18n="saveSettings">Save Settings</button>
+          </section>
+
+          <section class="user-data-section">
+            <h2 data-i18n="profileSection">Your Profile</h2>
+
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="resume" data-i18n="resumeTab">Resume</button>
+              <button class="tab-btn" data-tab="info" data-i18n="infoTab">Additional Info</button>
+            </div>
+
+            <div class="tab-content active" id="resume-tab">
+              <div class="file-upload-wrapper">
+                <textarea id="resume-text" placeholder="Paste your resume text here..."
+                  data-i18n-placeholder="resumePlaceholder"></textarea>
+              </div>
+            </div>
+
+            <div class="tab-content" id="info-tab">
+              <textarea id="additional-info" placeholder="Add specific skills, cover letter notes, or preferences..."
+                data-i18n-placeholder="infoPlaceholder"></textarea>
+            </div>
+          </section>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-view="match">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label" data-i18n="navMatch">Match</span>
+      </button>
+      <button class="nav-item" data-view="profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label" data-i18n="navProfile">Profile</span>
+      </button>
+    </nav>
+  </div>
+  <script src="translations.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+
+</html>

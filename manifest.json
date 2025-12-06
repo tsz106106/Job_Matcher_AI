@@ -1,0 +1,55 @@
+{
+    "manifest_version": 3,
+    "name": "Job Matcher with Gemini AI",
+    "version": "1.0",
+    "description": "Match your resume with job descriptions using Google Gemini AI.",
+    "permissions": [
+        "sidePanel",
+        "activeTab",
+        "scripting",
+        "storage"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "side_panel": {
+        "default_path": "sidepanel.html"
+    },
+    "action": {
+        "default_title": "Open Job Matcher"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.linkedin.com/*"
+            ],
+            "js": [
+                "content_linkedin.js"
+            ]
+        },
+        {
+            "matches": [
+                "*://*.reed.co.uk/*"
+            ],
+            "js": [
+                "content_reed.js"
+            ]
+        },
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content_generic.js"
+            ]
+        }
+    ],
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}
